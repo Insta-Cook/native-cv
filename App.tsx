@@ -147,8 +147,10 @@ export default function App() {
       console.log('Model is ready');
       setModel(model);
       theModel = model;
-      console.log('calling the subscriber');
-      subscriber[0]();
+      setTimeout(() => {
+        console.log('calling the subscriber');
+        subscriber[0]();
+      }, 2000);
     })();
   }, []);
 
