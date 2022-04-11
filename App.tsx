@@ -14,6 +14,7 @@ import * as tf from "@tensorflow/tfjs";
 import { useEffect, useRef, useState } from "react";
 import Canvas from "react-native-canvas";
 import { CanvasRenderingContext2D } from "react-native-canvas";
+// import { Camera, useCameraDevices, useFrameProcessor } from "react-native-vision-camera";
 
 const TensorCamera = cameraWithTensors(Camera);
 const { width, height } = Dimensions.get("window");
@@ -151,8 +152,29 @@ export default function App() {
     })();
   }, []);
 
+  // const devices = useCameraDevices()
+  // const device = devices.back
+
+  // const frameProcessor = useFrameProcessor((frame) => {
+  //   'worklet'
+  //   // const isHotdog = detectIsHotdog(frame)
+  //   // console.log(isHotdog ? "Hotdog!" : "Not Hotdog.")
+  //   console.log('frameProcessor');
+  // }, [])
+
   return (
     <View style={styles.container}>
+      {/* {
+        device && (
+          <Camera
+            style={styles.camera}
+            isActive={true}
+            device={device}
+            frameProcessor={frameProcessor}
+          />
+        )
+      } */}
+
       <TensorCamera
         style={styles.camera}
         type={Camera.Constants.Type.back}
