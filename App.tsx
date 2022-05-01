@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import { Camera } from "expo-camera";
-import * as cocoSsd from "@tensorflow-models/coco-ssd";
+import * as cocoSsd from "./model/index";
 import * as tf from "@tensorflow/tfjs";
 import { useEffect, useRef, useState } from "react";
 import Canvas from "react-native-canvas";
@@ -20,6 +20,7 @@ const TensorCamera = cameraWithTensors(Camera);
 const { width, height } = Dimensions.get("window");
 const subscriber: any = [];
 let theModel: cocoSsd.ObjectDetection | null = null;
+let counter = 0;
 
 LogBox.ignoreAllLogs(true);
 export default function App() {
@@ -49,18 +50,25 @@ export default function App() {
       // console.log('the model is here', theModel);
       // console.log('next image is here', nextImageTenor);
 
-      theModel
-        .detect(nextImageTenor)
-        .then((predictions) => {
-          // console.log('predictions', predictions);
-          drawRect(predictions, nextImageTenor);
-        })
-        .catch((err) => {
-          console.log(err);
-        }).finally(() => {
-          nextImageTenor.dispose();
-        });
+      if (counter % 30 == 0) {
+        setImmediate(() => {
+          if (!theModel) return;
 
+          theModel
+            .detect(nextImageTenor)
+            .then((predictions) => {
+              // console.log('predictions', predictions);
+              drawRect(predictions, nextImageTenor);
+            })
+            .catch((err) => {
+              console.log(err);
+            }).finally(() => {
+              nextImageTenor.dispose();
+            });
+        })
+      }
+
+      counter++;
       requestAnimationFrame(loop);
     };
 
@@ -139,6 +147,7 @@ export default function App() {
   useEffect(() => {
     (async () => {
       const status = await Camera.requestCameraPermissionsAsync();
+      // tf.setBackend('cpu');
       console.log('setting tensorflow');
       await tf.ready();
       console.log('tensporflow is ready');
@@ -182,8 +191,8 @@ export default function App() {
         type={Camera.Constants.Type.back}
         cameraTextureHeight={textureDims.height}
         cameraTextureWidth={textureDims.width}
-        resizeHeight={200}
-        resizeWidth={152}
+        resizeHeight={textureDims.height/4}
+        resizeWidth={textureDims.width/4}
         resizeDepth={3}
         onReady={handleCameraStream}
         autorender={false}
