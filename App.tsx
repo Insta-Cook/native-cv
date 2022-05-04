@@ -14,7 +14,10 @@ import { CanvasRenderingContext2D } from "react-native-canvas";
 import { drawRect } from "./utils";
 
 const TensorCamera = cameraWithTensors(Camera);
-const { width, height } = Dimensions.get("window");
+let { width, height } = Dimensions.get("window");
+
+width = width * 0.75;
+height = height * 0.75;
 
 LogBox.ignoreAllLogs(true);
 export default function App() {
@@ -64,13 +67,24 @@ export default function App() {
     // console.log('sth: ', sth);
     // console.log('other: ', other);
 
-    const boxes = await obj[4].array();
-    const classes = await obj[5].array();
-    const scores = await obj[6].array();
+    // console.log("obj length: ", obj.length);
 
-    // console.log('boxes: ', boxes);
-    // console.log('classes: ', classes);
-    // console.log('scores: ', scores);
+    // console.log("obj[0]: ", (await obj[0].array())[0]);
+    // console.log("obj[1]: ", (await obj[1].array())[0]); // scores
+    // console.log("obj[2]: ", (await obj[2].array())[0]); // could be boxes
+    // console.log("obj[3]: ", (await obj[3].array())[0]); // could be boxes
+    // console.log("obj[4]: ", (await obj[4].array())[0]); // bullshit
+    // console.log("obj[5]: ", (await obj[5].array())[0]); // bullshit
+    // console.log("obj[6]: ", (await obj[6].array())[0]); // classes
+    // console.log("obj[7]: ", (await obj[7].array())[0]); // bullshit
+
+    const boxes = await obj[3].array();
+    const classes = await obj[6].array();
+    const scores = await obj[1].array();
+
+    // console.log('boxes: ', boxes[0]);
+    // console.log('classes: ', classes[0]);
+    // console.log('scores: ', scores[0]);
 
     // Draw mesh
     const ctx = context.current;
@@ -80,11 +94,17 @@ export default function App() {
     requestAnimationFrame(() => {
       if (ctx) {
         ctx.clearRect(0, 0, width, height);
+
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle="#FF0000";
+        ctx.strokeRect(0, 0, width, height);//for white background
+
         drawRect(
           boxes[0],
           classes[0],
           scores[0],
-          0.8,
+          0.7,
           width,
           height,
           ctx
@@ -111,7 +131,7 @@ export default function App() {
 
       // 3. TODO - Load network
       const model = await tf.loadGraphModel(
-        "https://livelong.s3.au-syd.cloud-object-storage.appdomain.cloud/model.json"
+        "https://raw.githubusercontent.com/Insta-Cook/model-storage/main/instacook-1/model.json"
       );
       console.log("model is loaded");
       setModel(model);
@@ -176,13 +196,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   camera: {
-    width: "100%",
-    height: "100%",
+    width: "75%",
+    height: "75%",
   },
   canvas: {
     position: "absolute",
     zIndex: 100000,
-    width: "100%",
-    height: "100%",
+    width: "75%",
+    height: "75%",
   },
 });
