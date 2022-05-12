@@ -13,6 +13,7 @@ import { CanvasRenderingContext2D } from "react-native-canvas";
 import { drawRect } from "./utils";
 import axios from "axios";
 import RNFetchBlob from 'rn-fetch-blob';
+import React from "react";
 
 const TensorCamera = cameraWithTensors(Camera);
 let { width, height } = Dimensions.get("window");
@@ -46,7 +47,10 @@ export default function App() {
   };
 
   const initTF = async () => {
+    console.log('initting tf with backend:', tf.getBackend());
+    tf.setBackend('cpu');
     await tf.ready();
+    console.log('tf ready');
     setTfReady(true);
   }
 
@@ -214,18 +218,26 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <TensorCamera
-        style={styles.camera}
-        type={Camera.Constants.Type.back}
-        cameraTextureHeight={textureDims.height}
-        cameraTextureWidth={textureDims.width}
-        resizeHeight={300}
-        resizeWidth={300}
-        resizeDepth={3}
-        onReady={handleCameraReady}
-        autorender={true}
-        useCustomShadersToResize={false}
-      />
+      {
+        cameraPermission && tfReady
+        ? 
+        <TensorCamera
+          style={styles.camera}
+          type={Camera.Constants.Type.back}
+          cameraTextureHeight={textureDims.height}
+          cameraTextureWidth={textureDims.width}
+          resizeHeight={300}
+          resizeWidth={300}
+          resizeDepth={3}
+          onReady={handleCameraReady}
+          autorender={true}
+          useCustomShadersToResize={false}
+        />
+        : <Camera
+          style={styles.camera}
+        />
+      }
+      
       <Canvas style={styles.canvas} ref={handleCanvasReady} />
     </View>
   );
