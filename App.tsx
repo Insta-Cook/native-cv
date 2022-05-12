@@ -122,7 +122,7 @@ export default function App() {
       // });
 
       // Post via axios or other transport method
-      axios.post('http://192.168.1.106:3001/predict/tensor', {
+      axios.post('http://88.251.29.169:80/predict/tensor', {
         payload: {shape: shape, tensor: tensor},
       }, ).then((res) => {
         resolve(res.data);
