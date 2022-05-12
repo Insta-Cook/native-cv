@@ -15,6 +15,7 @@
     "@tensorflow/tfjs": "^3.14.0",
     "@tensorflow/tfjs-react-native": "^0.8.0",
     "@types/react-native-canvas": "^0.1.8",
+    "axios": "^0.27.2",
     "expo": "~44.0.0",
     "expo-camera": "^12.1.2",
     "expo-gl": "^11.1.2",
@@ -27,7 +28,8 @@
     "react-native-canvas": "^0.1.38",
     "react-native-fs": "^2.19.0",
     "react-native-web": "0.17.1",
-    "react-native-webview": "11.15.0"
+    "react-native-webview": "11.15.0",
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

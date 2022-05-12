@@ -111,35 +111,64 @@ for (let i = 0; i < keys.length; i++) {
   };
 }
 
+
+
 // Define a drawing function
 export const drawRect = (
   boxes: number[][],
-  classes: number[],
+  classes: string[],
   scores: number[],
   threshold: number,
   imgWidth: number,
   imgHeight: number,
   ctx: CanvasRenderingContext2D
 ) => {
+  console.log('\n\n\n\n\n');
+  const drawn = [];
+  // clear the rect
+  ctx.clearRect(0, 0, imgWidth, imgHeight);
   for (let i = 0; i <= boxes.length; i++) {
-    if (boxes[i] && classes[i] && scores[i] > threshold) {
+    if (boxes[i] && classes[i]) {
       // Extract variables
       const [y, x, height, width] = boxes[i];
-      console.log(y, x, height, width);
-      const text = classes[i] as number;
+
+      console.log('classes[i]', classes[i]);
+
+      // check if intersects with any previously drawn box
+      // let intersects = false;
+      // for (let j = 0; j < drawn.length; j++) {
+      //   const box1 = {x: x, y: y, w: width, h: height};
+      //   console.log('box1: ', box1);
+      //   const box2 = drawn[j];
+      //   if (checkOverlapping(box1, box2, 0.5)) {
+      //     intersects = true;
+      //     break;
+      //   }
+      // }
+
+      // if it intersects, skip it
+      // if (intersects) {
+      //   console.log('skipping');
+      //   continue;
+      // }
+
+      drawn.push({x, y, w: width, h: height});
+
+      // console.log('class id before rounding: ', classes[i]);
+      // console.log('class id after rounding: ', Math.round(classes[i]));
+
+      // const text = Math.round(classes[i]);
 
       // Set styling
-      ctx.strokeStyle = labelMap2[text]["color"];
+      ctx.strokeStyle = 'red';
       ctx.lineWidth = 10;
       ctx.fillStyle = "white";
       ctx.font = "30px Arial";
 
       // DRAW!!
       ctx.beginPath();
-      //   console.log('drawing: ', x, y, width, height);
-      //   console.log('class: ', text);
       ctx.fillText(
-        labelMap2[text]["name"] + " - " + Math.round(scores[i] * 100) / 100,
+        classes[i] + " - ", // + Math.round(scores[i] * 100) / 100,
         x * imgWidth,
         y * imgHeight - 10
       );
